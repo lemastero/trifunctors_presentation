@@ -1,7 +1,7 @@
 
 @@@ slide
-# Zivariant - mysterious abstraction behind ZIO
-## Modularity in zio-prelude
+# Zivariant
+## modularity in zio-prelude for all
 
 [@lemastero](https://github.com/lemastero) 2020 - Scalac
 @@@
@@ -18,5 +18,5 @@
 @@include[topics](includes/10_Trivariant.md)
 @@include[topics](includes/11_Type_Alias_Encoding.md)
 @@include[topics](includes/12_Laws.md)
-@@include[topics](includes/13_izumi_zio_effects.md)
-@@include[topics](includes/14_summary.md)
+@@include[topics](includes/14_izumi_zio_effects.md)
+@@include[topics](includes/15_summary.md)

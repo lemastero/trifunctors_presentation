@@ -2,7 +2,7 @@
 
 @@@@ slide
 
-## ZIO type aliases
+### ZIO type aliases
 
 ```scala
 type IO[+E, +A]   = ZIO[Any, E, A]
@@ -15,7 +15,7 @@ type URIO[-R, +A] = ZIO[R, Nothing, A]
 
 @@@@ slide
 
-## Classification of IO
+### Classification of IO
 
 ```scala
 IO[+A]         ~ () => A           // Monix Task (classic IO)

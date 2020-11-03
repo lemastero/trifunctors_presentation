@@ -43,15 +43,25 @@ trait Bicovariant[P[+_, +_]]
 
 ```scala
 trait Divariant[P[-_, +_]]
-    extends RightCovariant[P] with LeftContravariant[P] {
+    extends RightCovariant[P]
+    with LeftContravariant[P] {
   def dimap[A,B,C,D](fa: P[A,B])(f: C=>A, g: B=>D): P[C,D]
 }
 
 trait Bicovariant[P[+_, +_]]
-    extends RightCovariant[P] with LeftCovariant[P] {
+    extends RightCovariant[P]
+    with LeftCovariant[P] {
   def bimap[A,B,AA,BB](fa: P[A,B])(f: A=>AA, g: B=>BB): P[AA,BB]
 }
 ```
+@@@@
+
+@@@@ slide
+### More info about abstractions with 2 type params
+
+* My experiments with abstractions: https://github.com/lemastero/Triglav  
+* PR zio-prelude adding Bicovariant and RightFunctor https://github.com/zio/zio-prelude/pull/279  
+* PR zio-prelude adding Divariant laws https://github.com/zio/zio-prelude/pull/293
 @@@@
 
 @@@

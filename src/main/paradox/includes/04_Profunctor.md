@@ -22,25 +22,6 @@ trait Divariant[:=>[-_, +_]] {
 @@@@ slide
 ### Divariant Laws 1
 
-rightMap behaves nicely
-```scala
-def rightMapCompose[A, B, B2, B3](
-  ab: A:=>B, f: B => B2, g: B2 => B3
-) = {
-  val lh: A:=>B => A:=>B3 = rightMap(g compose f)
-  val rh: A:=>B => A:=>B3 = rightMap(g) compose rightMap(f)
-  lh(ab) == rh(ab)
-}
-
-def rightMapIdentity[A, B](ab: A:=>B) = {
-  rightMap(identity[B])(ab) == ab
-}
-```
-@@@@
-
-@@@@ slide
-### Divariant Laws 2
-
 leftContramap behaves nicely
 
 ```scala
@@ -54,6 +35,25 @@ def leftContramapCompose[A, B, A2, A3](
 
 def leftContramapidentity[A, B](ab: A :=> B) =
   lContramap(identity[A])(ab) == ab
+```
+@@@@
+
+@@@@ slide
+### Divariant Laws 2
+
+rightMap behaves nicely
+```scala
+def rightMapCompose[A, B, B2, B3](
+  ab: A:=>B, f: B => B2, g: B2 => B3
+) = {
+  val lh: A:=>B => A:=>B3 = rightMap(g compose f)
+  val rh: A:=>B => A:=>B3 = rightMap(g) compose rightMap(f)
+  lh(ab) == rh(ab)
+}
+
+def rightMapIdentity[A, B](ab: A:=>B) = {
+  rightMap(identity[B])(ab) == ab
+}
 ```
 @@@@
 
@@ -109,10 +109,10 @@ dimap behaves as rightMap followed by leftContramap
 ```scala
 implicit val Function1Divariant: Divariant[Function1] =
   new Divariant[Function1] {
-    def leftContramap[A, B, C](c2a: C => A): (A => B) => C => B = 
+    def leftContramap[A,B,C](c2a: C => A): (A => B) => C => B = 
       a2b => c2a andThen a2b
     
-    def rightMap[A, B, C](b2c: B => C): (A => B) => A => C =
+    def rightMap[A,B,C](b2c: B => C): (A => B) => A => C =
       a2b => b2c compose a2b 
   }
 ```

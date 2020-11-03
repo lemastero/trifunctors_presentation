@@ -18,28 +18,8 @@ trait Bicovariant[<=>[+_, +_]] {
 ```
 @@@@
 
-
 @@@@ slide
 ### Bicovariant Laws 1
-
-rightMap behaves nicely
-```scala
-def rightMapCompose[A, B, B2, B3](
-  ab: A<=>B, f: B => B2, g: B2 => B3
-) = {
-  val lh: A<=>B => A<=>B3 = rightMap(g compose f)
-  val rh: A<=>B => A<=>B3 = rightMap(g) compose rightMap(f)
-  lh(ab) == rh(ab)
-}
-
-def rightMapIdentity[A, B](ab: A<=>B) = {
-  rightMap(identity[B])(ab) == ab
-}
-```
-@@@@
-
-@@@@ slide
-### Bicovariant Laws 2
 
 leftMap behaves nicely
 ```scala
@@ -53,6 +33,25 @@ def leftMapCompose[A, B, A2, A3](
 
 def leftMapIdentity[A, B](ab: A <=> B) = {
   leftMap(identity[A])(ab) == ab
+}
+```
+@@@@
+
+@@@@ slide
+### Bicovariant Laws 2
+
+rightMap behaves nicely
+```scala
+def rightMapCompose[A, B, B2, B3](
+  ab: A<=>B, f: B => B2, g: B2 => B3
+) = {
+  val lh: A<=>B => A<=>B3 = rightMap(g compose f)
+  val rh: A<=>B => A<=>B3 = rightMap(g) compose rightMap(f)
+  lh(ab) == rh(ab)
+}
+
+def rightMapIdentity[A, B](ab: A<=>B) = {
+  rightMap(identity[B])(ab) == ab
 }
 ```
 @@@@

@@ -13,22 +13,14 @@ Presentation about ...
 ### Reveal Plugin for Paradox
 [https://sfxcode.github.io/sbt-paradox-reveal](https://sfxcode.github.io/sbt-paradox-reveal/)
 
+### sbt site plugin
+[https://github.com/sbt/sbt-site](https://github.com/sbt/sbt-site)
 ## Usage
 
 ### Open sbt in console
 ```
-sbt
+sbt ~paradoxBrowse
+sbt ~previewAuto
 ```
 
-### Run paradoxBrowse
-```
- ~ paradoxBrowse
-```
-
-### Or Run previewAuto from sbt site plugin
-
-[https://github.com/sbt/sbt-site](https://github.com/sbt/sbt-site)
-
-```
-previewAuto
-```
+file:///Users/piter/work/lemastero/trifunctors_presentation/target/paradox/site/main/index.html

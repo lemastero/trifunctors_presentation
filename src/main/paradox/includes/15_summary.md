@@ -1,13 +1,13 @@
 @@@ slide
 
-## What have we seen
+### Key ideas
 
 @@@@ fragments  
 zio-prelude - Divariant Bivariant
 RightCovariant == Divariant ∩ Bivariant
-Types of IO
+Types of IO - ZIO is the next level
 zio-prelude - Zifunctor
-izumi - zio-effects
+https://izumi.7mind.io/bio/index.html
 @@@@
 
 @@@
