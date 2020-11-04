@@ -8,7 +8,7 @@ lazy val presentation = (project in file("."))
     // add dependencies if needed
     // libraryDependencies += "com.example" %% "example-lib-scala" % "1.0.0",
     Compile / paradoxRevealTheme ~= {
-      _.withTheme(ParadoxRevealTheme.ThemeMoon)  // choose theme
+      _.withTheme(ParadoxRevealTheme.ThemeNight)  // choose theme
         .withDefaultTransition(ParadoxRevealTheme.TransitionSlide) // choose transition
         // .withMathPlugin // add plugin if needed
     },

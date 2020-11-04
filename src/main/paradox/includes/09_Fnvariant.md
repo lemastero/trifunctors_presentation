@@ -2,6 +2,12 @@
 
 @@@@ slide
 
+### Friends: Fnvariant
+
+@@@@
+
+@@@@ slide
+
 ### Fnvariant
 
 ```scala
@@ -50,6 +56,73 @@ new Fnvariant[Schedule] {
     s => s.dimap(e,a).provideSome(r)
 }
 ```
+
+@@@@
+
+@@@@ slide
+
+### Friends: Trivariant
+
+Hierarchy in Haskell:
+
+```scala
+trait Covariant[Z[+_]]
+trait Bicovariant[B[+_, +_]]
+trait Trivariant[Z[+_, +_, +_]]
+```
+
+@@@@
+
+@@@@ slide
+
+### Trivariant
+
+```scala
+trait Trivariant[Z[+_, +_, +_]] {
+  def mapFirst[R,E,A,R1](e: R => R1): Z[R,E,A] => Z[R1,E,A]
+  def map[R,E,A,A1](a: A => A1): Z[R,E,A] => Z[R,E,A1]
+  def mapLeft[R,E,A,E1](e: E => E1): Z[R,E,A] => Z[R,E1,A]
+
+  def bimap[R,E,A,E1,A1](e: E => E1, a: A => A1
+  ): Z[R,E,A] => Z[R,E1,A1]
+
+  def trimap[R,E,A,R1,E1,A1](r: R => R1, e: E => E1, a: A => A1
+  ): Z[R,E,A] => Z[R1,E1,A1]
+}
+```
+
+@@@@
+
+@@@@ slide
+
+### Tuple3 Trivariant
+
+```scala
+new Trivariant[Tuple3] {
+  def trimap[R,E,A,R1,E1,A1](
+    r: R => R1, e: E => E1, a: A => A1
+  ): (R,E,A) => (R1,E1,A1) = {
+    case (fr,fe,fa) => (r(fr), e(fe), a(fa))
+  }
+}
+```
+
+* Tuple4, Tuple5, ...., Tuple22
+
+@@@@
+
+@@@@ slide
+
+### Beyoned Zivariant, Trivariant, Fnvariant
+
+Do we need abstraction for?
+
+@@@@@ fragments
+1. CT[-_, -_, -_] ?
+2. F[+_, -_, -_] ?
+3. F[-_, +_, -_] F[-_, +_, -_] ?
+4. Z[+_, -_, +_] Z[+_, -_, +_] ?
+@@@@@
 
 @@@@
 

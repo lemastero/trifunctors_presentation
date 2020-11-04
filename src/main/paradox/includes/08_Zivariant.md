@@ -150,21 +150,6 @@ trait Zivariant[Z[-_,+_,+_]] {
 
 @@@@ slide
 
-### Zivariant Instance - ZIO
-
-```scala
-new Zivariant[ZIO] {
-  def zimap[R,E,A,R1,E1,A1](
-    r: R1 => R, e: E => E1, a: A => A1
-  ): ZIO[R,E,A] => ZIO[R1,E1,A1] =
-    rea => rea.bimap(e,a).provideSome(r)
-}
-```
-
-@@@@
-
-@@@@ slide
-
 ### Zivariant R => Either[E,A]
 
 ```scala
@@ -201,8 +186,115 @@ new Zivariant[({type lambda[-R,+E,+A] = R=>(E,A)})#lambda] {
 @@@@
 
 @@@@ slide
+    
+### Zivariant R => bicovariant[E,A]
 
-## Othere Zivariant instances
+```scala
+def fromFunctionBicovariant[<=>[+_, +_]](implicit
+  ev: Bicovariant[<=>]
+): Zivariant[({ type lambda[-R, +E, +A] = R => E <=> A })#lambda] =
+  new Zivariant[({ type lambda[-R, +E, +A] = R => E <=> A })#lambda] {
+    override def zimap[R, E, A, R1, E1, A1](
+      r: R1 => R,
+      e: E => E1,
+      a: A => A1
+    ): (R => <=>[E, A]) => R1 => <=>[E1, A1] =
+      rea => r1 => (r andThen rea)(r1).bimap(e, a)
+  }
+```
+
+@@@@
+
+@@@@ slide
+
+### ZIO Zivariant
+
+```scala
+implicit val ZioZivariant: Zivariant[ZIO] = new Zivariant[ZIO] {
+  override def zimap[R, E, A, R1, E1, A1](
+    r: R1 => R, e: E => E1, a: A => A1
+  ): ZIO[R,E,A] => ZIO[R1,E1,A1] =
+    rea => rea.bimap(e, a).provideSome(r)
+}
+```
+
+@@@@
+
+@@@@ slide
+
+### ZStream Zivariant
+
+```scala
+implicit val ZStreamZivariant: Zivariant[ZStream] =
+  new Zivariant[ZStream] {
+    override def zimap[E, A, R, EE, AA, RR](
+      r: EE => E,
+      e: A => AA,
+      a: R => RR
+    ): ZStream[E, A, R] => ZStream[EE, AA, RR] =
+      rea => rea.bimap(e, a).provideSome(r)
+  }
+```
+
+@@@@
+
+@@@@ slide
+
+### ZSTM Zivariant
+
+```scala
+implicit val ZSTMZivariant: Zivariant[ZSTM] =
+  new Zivariant[ZSTM] {
+    override def zimap[E, A, R, EE, AA, RR](r: EE => E, e: A => AA, a: R => RR): ZSTM[E, A, R] => ZSTM[EE, AA, RR] =
+      rea => rea.bimap(e, a).provideSome(r)
+  }
+```
+
+@@@@
+
+@@@@ slide
+
+### ZLayer Zivariant
+
+```scala
+implicit val ZLayerZivariant: Zivariant[ZLayer] =
+  new Zivariant[ZLayer] {
+    override def zimap[E, A, R, EE, AA, RR](
+      r: EE => E,
+      e: A => AA,
+      a: R => RR
+    ): ZLayer[E, A, R] => ZLayer[EE, AA, RR] =
+      rea => ZLayer.fromFunctionMany(r) >>> rea.map(a).mapError(e)
+  }
+```
+
+No bimap, no provideSome for ZLayer ?
+
+@@@@
+
+@@@@ slide
+
+### ZManaged Zivariant
+
+```scala
+implicit val ZManagedZivariant: Zivariant[ZManaged] =
+  new Zivariant[ZManaged] {
+    override def zimap[E, A, R, EE, AA, RR](
+      r: EE => E,
+      e: A => AA,
+      a: R => RR
+    ): ZManaged[E, A, R] => ZManaged[EE, AA, RR] =
+      rea => rea.bimap(e, a).provideSome(r)
+  }
+```
+
+No bimap, no provideSome for ZLayer ?
+
+@@@@
+
+@@@@ slide
+
+### Othere Zivariant instances
 
 ```scala
 ZIO[-R, +E, +A]
@@ -215,72 +307,21 @@ ZSTM[-R, +E, +A]
 @@@@
 
 @@@@ slide
-
-## Zivariant modularity (1/4)
-
-```scala
-trait TriRightCovariant[Z[_,_,+_]] {
-  def map[R,E,A,A1](f: A=>A1): Z[R,E,A]=>Z[R,E,A1]
-}
-trait TriLeftCovariant[Z[_,+_,_]] {
-  def mapLeft[R,E,A,E1](e: E=>E1): Z[R,E,A]=>Z[R,E1,A]
-}
-trait TriBivariant[Z[_,+_,+_]]
-    extends TriRightCovariant[Z] with TriLeftCovariant[Z] {
-  def bimap[R,E0,A,E1,A1](e: E0=>E1, a: A=>A1): Z[R,E0,A]=>Z[R,E1,A1]
-}
-```
-
-@@@@
-
-@@@@ slide
-
-## Zivariant modularity (2/4)
+    
+### Zivariant example
 
 ```scala
-trait TriRightCovariant[Z[_,_,+_]] {
-  def map[R,E,A,A1](f: A=>A1): Z[R,E,A]=>Z[R,E,A1]
-}
-trait TriContravariant[Z[-_,_,_]] {
-  def contramap[R,E2,A,R1](r: R1=>R): Z[R,E2,A] => Z[R1,E2,A]
-}
-trait TriDivariant[Z[-_,_,+_]]
-    extends TriContravariant[Z] with TriRightCovariant[Z] {
-  def dimap[R,E,A,R1,A1](r: R1=>R, a: A=>A1): Z[R,E,A]=>Z[R1,E,A1]
-}
-```
+import Zivariant.FunctionEitherZivariant.zimap
 
-@@@@
+val parseAvro: String => Either[Throwable, AvroModel] = ???
 
-@@@@ slide
+def getContent: KafkaMessage => String = ???
+def handleError: Throwable => AppError = ???
+def toDomainModel: AvroModel => DomainModel = ???
 
-## Zivariant modularity (3/4)
-
-```scala
-trait TriLeftCovariant[Z[_,+_,_]] {
-  def mapLeft[R,E,A,E1](e: E=>E1): Z[R,E,A]=>Z[R,E1,A]
-}
-trait TriContravariant[Z[-_,_,_]] {
-  def contramap[R,E2,A,R1](r: R1=>R): Z[R,E2,A] => Z[R1,E2,A]
-}
-trait TriLeftDivariant[Z[-_,+_,_]] extends TriContravariant[Z] with TriLeftCovariant[Z] {
-  def dimapLeft[R,E,A,R1,E1](r: R1=>R, e: E=>E1): Z[R,E,A]=>Z[R1,E1,A]
-}
-```
-
-@@@@
-
-@@@@ slide
-
-## Zivariant modularity (4/4)
-
-```scala
-trait Zivariant[Z[-_, +_, +_]]
-    extends TriBivariant[Z]
-    with TriLeftDivariant[Z]
-    with TriDivariant[Z] {
-  def zimap[R,E,A,R1,E1,A1](r: R1 => R, e: E => E1, a: A => A1): Z[R,E,A] => Z[R1,E1,A1]
-}
+val kafkaHandler = zimap(getContent, handleError, toDomainModel)
+val price: KafkaMessage => Either[AppError, DomainModel] =
+  kafkaHandler(parseAvro)
 ```
 
 @@@@

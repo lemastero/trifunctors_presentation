@@ -1,7 +1,7 @@
 
 @@@ slide
 # Zivariant
-## modularity in zio-prelude for all
+## zio-prelude modularity
 
 [@lemastero](https://github.com/lemastero) 2020 - Scalac
 @@@
@@ -14,9 +14,11 @@
 @@include[topics](includes/06_All_2_Type_Params_ZOO.md)
 @@include[topics](includes/07_Aproaches_IO.md)
 @@include[topics](includes/08_Zivariant.md)
+@@include[topics](includes/08_Zivariant_Modular.md)
 @@include[topics](includes/09_Fnvariant.md)
-@@include[topics](includes/10_Trivariant.md)
-@@include[topics](includes/11_Type_Alias_Encoding.md)
 @@include[topics](includes/12_Laws.md)
+@@include[topics](includes/13_Deriving.md)
+@@include[topics](includes/11_Type_Alias_Encoding.md)
 @@include[topics](includes/14_izumi_zio_effects.md)
+@@include[topics](includes/08_Zivariant_Design.md)
 @@include[topics](includes/15_summary.md)
