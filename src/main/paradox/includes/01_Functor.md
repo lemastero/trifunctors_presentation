@@ -1,4 +1,36 @@
-@@@ slide
+@@@ slide { color=#242220 }
+
+@@@@ slide
+
+## Covariant -
+### map things
+
+@@@@
+
+@@@@ slide
+
+### map is very common
+
+```scala
+List(2,3,4).map(isOdd) == List(false, true, false)
+Option(42).map(isOdd) == Option(false)
+Right("Success").map(_.length) == Right(7)
+```
+@@@@
+
+@@@@ slide
+
+### map ZIO
+
+```scala
+val loadEmployee: ZIO[EmployeeId, DbError, Employee] = ???
+
+def getDetails(e: Employee): EmployeeDetails = ???
+
+val loadDetails: ZIO[EmployeeId, DbError, EmployeeDetails] =
+  loadEmployee.map(getDetails)
+```
+@@@@
 
 @@@@ slide
 

@@ -1,18 +1,4 @@
-@@@ slide
-
-@@@@ slide
-
-### Problem 1
-What type class is behind ZIO ?
-
-```scala
-IO[+A]         ~ () => A           // Monix Task (functor IO)
-BIO[+E,+A]     ~ () => Either[E,A] // Monix BIO  (bifunctor IO)
-PIO[-R,+A]     ~ R => A            // arrow      (profunctor IO)
-Trio[-R,+E,+A] ~ R => Either[E,A]  // ZIO        (? IO)
-```
-
-@@@@
+@@@ slide { color=#242220 }
 
 @@@@ slide
 
@@ -79,9 +65,6 @@ def FailedZIODiv[A] = new Divariant[ZIO[*,*,A]] {
 @@@@ slide
 
 ### Too many instances:
-```scala
-ZIO[-R,+E,+A]
-```
 * 2 Divariant
 * Bicovariant
 * 2 x Covariant

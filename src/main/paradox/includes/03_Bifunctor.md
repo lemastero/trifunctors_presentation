@@ -1,6 +1,94 @@
-@@@ slide
+@@@ slide { color=#242220 }
 
 @@@@ slide
+
+## Bicovariant -
+### map two things
+
+@@@@
+
+@@@@ slide
+
+### Map Either
+
+We can map Right on Either
+```scala
+Right("Success").map(_.length) == Right(7)
+```
+
+@@@@
+
+@@@@ slide
+
+### Map Either ?
+
+```scala
+Right("Success").map(_.length) == Right(7)
+```
+
+* can we map left ?
+* can we map both ?
+* can we map other types that have 2 results?
+
+@@@@
+
+@@@@ slide
+
+### Map Either ?
+
+```scala
+def getDetails: Employee => EmployeeDetails = ???
+def asDomainError: Throwable => NotFound = ???
+
+val employee: Either[Throwable, Employee] = loadEmployee(Id(4))
+
+val result2: Either[NotFound, Employee] =
+  employee.leftMap(asDomainError)
+
+val result1: Either[NotFound, EmployeeDetails] =
+  employee.bimap(asDomainError, getDetails)
+```
+
+@@@@
+
+@@@@ slide
+
+### Map Either
+
+We can with `zio.prelude._`
+```scala
+import zio.prelude._
+
+def getDetails: Employee => EmployeeDetails = ???
+def asDomainError: Throwable => NotFound = ???
+
+val employee: Either[Throwable, Employee] = loadEmployee(Id(4))
+
+val result2: Either[NotFound, Employee] =
+  employee.leftMap(asDomainError)
+
+val result1: Either[NotFound, EmployeeDetails] =
+  employee.bimap(asDomainError, getDetails)
+```
+
+@@@@
+
+@@@@ slide
+
+### Map Tuple2
+
+```scala
+import zio.prelude._
+
+val product: (Int, List[String]) = (42, List("foo", "bar"))
+product.rightMap(_.headOption) mustBe(42, Some("foo"))
+product.leftMap(_ - 1) mustBe(41, List("foo", "bar"))
+```
+
+@@@@
+
+@@@@ slide
+
 ### Bicovariant
 
 map 2 things we have or can compute (2 * Covariant)
@@ -15,6 +103,38 @@ trait Bicovariant[<=>[+_, +_]] {
       (A<=>B) => (AA<=>BB) =
     rightMap(g) andThen leftMap(f)
 }
+```
+@@@@
+
+@@@@ slide
+
+### Bicovariant Tuple2
+
+```scala
+val Tuple2Bicovariant: Bicovariant[Tuple2] =
+new Bicovariant[Tuple2] {
+  def bimap[A,B,AA,BB](
+      f: A => AA,
+      g: B => BB): (A,B) => (AA,BB) =
+    { case (a, b) => (f(a), g(b)) }
+}
+```
+@@@@
+
+@@@@ slide
+
+### Bicovariant Either
+
+```scala
+val EitherBicovariant: Bicovariant[Either] =
+  new Bicovariant[Either] {
+    def bimap[A,B,AA,BB](
+        f: A => AA,
+        g: B => BB): Either[A,B] => Either[AA,BB] = {
+      case Right(a) => Right(g(a))
+      case Left(b)  => Left(f(b))
+    }
+  }
 ```
 @@@@
 
@@ -97,32 +217,46 @@ def bimapCoherence[A, A2, A3, B, B2, B3](
 @@@@
 
 @@@@ slide
-### Bicovariant Instances - Tuple
+### Bicovariant ZIO
 
+bimap works the same as rightMap combined with leftMap
 ```scala
-implicit val Tuple2Bicovariant: Bicovariant[Tuple2] =
-  new Bicovariant[Tuple2] {
-    def bimap[A B,AA,BB](f: A => AA, g: B => BB):
-         (A,B) => (AA,BB) =
-      { case (a, b) => (f(a), g(b)) }
-  }
+val loadEmployee: ZIO[EmployeeId, Throwable, Employee] = ???
+
+def getDetails(e: Employee): EmployeeDetails = ???
+def asDomainError(e: Throwable): AppError = ???
+
+val loadEmployeeDetails: ZIO[Int, AppError, EmployeeDetails] =
+  loadEmployeeFromDb.bimap(asDomainError, getDetails)
 ```
 @@@@
 
 @@@@ slide
-### Bicovariant Instances - Either
 
-Either
+### Bicovariant Exit
+
+trivial instance
 ```scala
-implicit val EitherBicovariant: Bicovariant[Either] =
-  new Bicovariant[Either] {
-    def bimap[A,B,AA,BB](f: A => AA, g: B => BB):
-        Either[A,B] => Either[AA,BB] = {
-      case Right(a) => Right(g(a))
-      case Left(b)  => Left(f(b))
-    }
-  }
+implicit val ExitBicovariant: Bicovariant[Exit] =
+    new Bicovariant[Exit] {
+  def bimap[A,E,AA,EE](
+    f: A => AA,
+    g: E => EE): Exit[A,E] => Exit[AA,EE] =
+    _.bimap(f, g)
+}
 ```
+
+@@@@
+
+@@@@ slide
+
+### Bicovariant more
+
+ZStream   
+ZManaged  
+ZLayer  
+ZSTM  
+
 @@@@
 
 @@@

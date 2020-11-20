@@ -1,25 +1,46 @@
-@@@ slide
+@@@ slide { color=#242220 }
 
 @@@@ slide
-### Divariant
 
-Generalized function (prepare input - leftMap, map output - rightMap)
+## Divariant -
+### prepare input and map output
 
+@@@@
+
+@@@@ slide
+
+### Function1 compose andThen
+
+compose - prepare input, andThen - change result
 ```scala
-trait Divariant[:=>[-_, +_]] {
+val loadEmployee: Int => Employee = ???
 
-  def rightMap[A,B,C](f: B => C): (A :=> B) => (A :=> C)
+def getDetails: Employee => EmployeeDetails = ???
+def idFromEmployee: EmployeeId => Int = ???
 
-  def leftContramap[A,B,C](f: C => A): (A :=> B) => (C :=> B)
-
-  def dimap[A,B,C,D](f: C => A, g: B => D):
-      (A :=> B) => (C :=> D) =
-    (ab: A :=> B) => rightMap(g)(leftContramap(f)(ab))
-}
+val loadEmployeeDetails: EmployeeId => EmployeeDetails =
+  (loadEmployee andThen getDetails) compose idFromEmployee
 ```
 @@@@
 
 @@@@ slide
+
+### ZIO
+
+provideSome - prepare input, map - change result
+```scala
+val loadEmployee: ZIO[Int, Throwable, Employee] = ???
+
+def getDetails: Employee => EmployeeDetails = ???
+def idFromEmployee: EmployeeId => ???
+
+val loadEmployeeDetails: ZIO[EmployeeId, Throwable, EmployeeDetails] =
+  loadEmployee.provideSome(idFromEmployee).map(getDetails)
+```
+@@@@
+
+@@@@ slide
+
 ### Divariant Laws 1
 
 leftContramap behaves nicely
@@ -39,6 +60,7 @@ def leftContramapidentity[A, B](ab: A :=> B) =
 @@@@
 
 @@@@ slide
+
 ### Divariant Laws 2
 
 rightMap behaves nicely
@@ -102,7 +124,7 @@ def dimapCoherence[A, A2, A3, B, B2, B3](
 @@@@
 
 @@@@ slide
-### Divariant Instance - Functions1
+### Divariant Instance - Function1
 
 dimap behaves as rightMap followed by leftContramap 
 

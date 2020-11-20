@@ -1,4 +1,4 @@
-@@@ slide
+@@@ slide { color=#242220 }
 
 @@@@ slide
 
@@ -9,17 +9,6 @@
 * @link[zio-prelude #304](https://github.com/zio/zio-prelude/pull/304) add Zivariant
 * @link[zio-prelude #291](https://github.com/zio/zio-prelude/issues/291) issue motivating Zivariant
 * @link[zio #4220](https://github.com/zio/zio/pull/4220) add support for Divariant laws - LawfulF and LawsF
-
-@@@@
-
-@@@@ slide
-
-### Opportunities to contribute
-
-* @link[zio-prelude #290](https://github.com/zio/zio-prelude/issues/290) add laws for Divariant
-* @link[zio-prelude #361](https://github.com/zio/zio-prelude/issues/361) add laws for Zivariant
-* laws for Fnvariant
-* laws for Trivariant
 
 @@@@
 

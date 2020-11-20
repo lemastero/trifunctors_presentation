@@ -1,4 +1,4 @@
-@@@ slide
+@@@ slide { color=#242220 }
 
 ### Zivariant design
 

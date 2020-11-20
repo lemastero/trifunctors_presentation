@@ -1,25 +1,14 @@
 # My Presentation
 
-Presentation about ...
-
 ## Documentation
-
-### Paradox
-[https://developer.lightbend.com/docs/paradox/current/](https://developer.lightbend.com/docs/paradox/current/)
-
-### Reveal.js
-[https://github.com/hakimel/reveal.js/](https://github.com/hakimel/reveal.js/)
-
-### Reveal Plugin for Paradox
-[https://sfxcode.github.io/sbt-paradox-reveal](https://sfxcode.github.io/sbt-paradox-reveal/)
-
-### sbt site plugin
-[https://github.com/sbt/sbt-site](https://github.com/sbt/sbt-site)
-## Usage
+* [reveal.js](https://revealjs.com/markup/)
+* [https://developer.lightbend.com/docs/paradox/current/](https://developer.lightbend.com/docs/paradox/current/customization/templating.html)
+* [https://sfxcode.github.io/sbt-paradox-reveal](https://sfxcode.github.io/sbt-paradox-reveal/directive/index.html)
+* [https://github.com/sbt/sbt-site](https://github.com/sbt/sbt-site)
 
 ### Open sbt in console
 ```
-sbt ~paradoxBrowse
+sbt '~paradoxBrowse'
 sbt ~previewAuto
 ```
 

@@ -1,4 +1,4 @@
-@@@ slide
+@@@ slide { color=#242220 }
 
 @@@@ slide
 ### 2 type parameters ZOO (1/2)
@@ -36,24 +36,9 @@ trait Bicovariant[P[+_, +_]]
   def bimap[A,B,AA,BB](fa: P[A,B])(f: A=>AA, g: B=>BB): P[AA,BB]
 }
 ```
-@@@@
 
-@@@@ slide
-### Hot take: modularity is the key!
+YAGNI ?
 
-```scala
-trait Divariant[P[-_, +_]]
-    extends RightCovariant[P]
-    with LeftContravariant[P] {
-  def dimap[A,B,C,D](fa: P[A,B])(f: C=>A, g: B=>D): P[C,D]
-}
-
-trait Bicovariant[P[+_, +_]]
-    extends RightCovariant[P]
-    with LeftCovariant[P] {
-  def bimap[A,B,AA,BB](fa: P[A,B])(f: A=>AA, g: B=>BB): P[AA,BB]
-}
-```
 @@@@
 
 @@@@ slide
