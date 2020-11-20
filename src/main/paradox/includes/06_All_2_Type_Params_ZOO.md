@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 ### 2 type parameters ZOO (1/2)
@@ -44,7 +44,7 @@ YAGNI ?
 @@@@ slide
 ### More info about abstractions with 2 type params
 
-* My experiments with abstractions: https://github.com/lemastero/Triglav  
+* Experiments with abstractions: https://github.com/lemastero/Triglav  
 * PR zio-prelude adding Bicovariant and RightFunctor https://github.com/zio/zio-prelude/pull/279  
 * PR zio-prelude adding Divariant laws https://github.com/zio/zio-prelude/pull/293
 @@@@

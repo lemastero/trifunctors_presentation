@@ -1,88 +1,31 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
 ### Zifunctor effects
 
-#### Task => cats-effects  
-#### ZIO  => ???  
-
 @@@@
 
 @@@@ slide
     
-### Zivariant example R => Either[E,A]
+### Zivariant as base Effect ?
 
 ```scala
-import Zivariant.FunctionEitherZivariant.zimap
+def getEmployeeDetails[F[_,_,_]](
+  get: F[Int,Throwable,Employee])(implicit
+  ZF: Zivariant[F]): F[EmployeeId, AppError, EmployeeDetails] = {
+    def idFromEmployee: EmployeeId => ???
+    def asDomainError: Throwable => AppError = ???
+    def getDetails: Employee => EmployeeDetails = ???
 
-val parseAvro: String => Either[Throwable, AvroModel] = ???
+    ZF.zimap(idFromEmployee, asDomainError, getDetails)(get)
+}
 
-def getContent: KafkaMessage => String = ???
-def handleError: Throwable => AppError = ???
-def toDomainModel: AvroModel => DomainModel = ???
+val loadEmployeeFromDb: ZIO[Int, Throwable, Employee] = ???
 
-val kafkaHandler = zimap(getContent, handleError, toDomainModel)
-val read: KafkaMessage => Either[AppError, DomainModel] =
-  kafkaHandler(parseAvro)
-```
-
-@@@@
-
-@@@@ slide
-
-### Zifunctor ZIO[R,E,A]
-
-```scala
-import Zivariant.ZioZivariant.zimap
-
-val parseAvro: ZIO[String,Throwable,AvroModel] = ???
-
-def getContent: KafkaMessage => String = ???
-def handleError: Throwable => AppError = ???
-def toDomainModel: AvroModel => DomainModel = ???
-
-val kafkaHandler = zimap(getContent, handleError, toDomainModel)
-val read: ZIO[KafkaMessage, AppError, DomainModel] =
-  kafkaHandler(parseAvro)
-```
-
-@@@@
-
-@@@@ slide
-
-### Zifunctor monix Task[R,E,A]
-
-```scala
-import monix.eval.Task
-import Zivariant.TaskZivariant.zimap
-
-val parseAvro: String => Task[Either[Throwable,AvroModel]] = ???
-
-def getContent: KafkaMessage => String = ???
-def handleError: Throwable => AppError = ???
-def toDomainModel: AvroModel => DomainModel = ???
-
-val kafkaHandler = zimap(getContent, handleError, toDomainModel)
-val read: KafkaMessage => Task[Either[AppError, DomainModel]] =
-  kafkaHandler(parseAvro)
-```
-
-@@@@
-
-@@@@ slide
-
-### Zifunctor F[R,E,A]
-
-```scala
-val parseAvro: F[String,Throwable,AvroModel] = ???
-
-def getContent: KafkaMessage => String = ???
-def handleError: Throwable => AppError = ???
-def toDomainModel: AvroModel => DomainModel = ???
-
-val kafkaHandler = zimap(getContent, handleError, toDomainModel)
-val read: F[KafkaMessage, AppError, DomainModel] = kafkaHandler(parseAvro)
+val loadEmployee: ZIO[EmployeeId, AppError, EmployeeDetails] =
+  getEmployeeDetails(loadEmployeeFromDb)
+}
 ```
 
 @@@@
@@ -102,11 +45,11 @@ parseAvro magic processMsg
 
 @@@@ slide
 
-### M0ree Powar !1!!!
+### Need more power
 
 @@@@@ fragments  
 add support for Monad for A ?  
-add support for Traverse for A ?  
+lift Associative for error ?  
 add support for Divisible for R ?  
 restrict type of A or all types: R,E,A ?  
 @@@@@

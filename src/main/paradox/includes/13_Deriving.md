@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
@@ -50,6 +50,14 @@ trait TriLeftCovariant[Z[_,+_,_]] extends Trinvarint[Z] { self =>
   def mapLeft[R,E,A,E1](e: E => E1): Z[R,E,A] => Z[R,E1,A]
 }
 ```
+
+@@@@
+
+@@@@ slide
+
+### Deriving Hierarchy
+
+![derive_hierarchy_3.svg](images/derive_hierarchy_3.svg)
 
 @@@@
 

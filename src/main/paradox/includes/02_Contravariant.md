@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
@@ -334,6 +334,14 @@ val loadEmployee1: ZIO[EmployeeId, Throwable, Employee] =
 val loadEmployee2: ZIO[EmployeeId, Throwable, Employee] =
   loadEmployeeFromDb.contramap(idFromEmployee)
 ```
+
+@@@@
+
+@@@@ slide
+
+### Contravariant special Functor
+
+![contramap.svg](images/contramap.svg)
 
 @@@@
 

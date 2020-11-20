@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ fragments  
 

@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
@@ -256,6 +256,14 @@ ZStream
 ZManaged  
 ZLayer  
 ZSTM  
+
+@@@@
+
+@@@@ slide
+
+### Bicovariant special Functor
+
+![bimap.svg](images/bimap.svg)
 
 @@@@
 

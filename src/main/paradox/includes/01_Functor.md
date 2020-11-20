@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
@@ -64,6 +64,14 @@ object Covariant extends LawfulF.Covariant[DeriveEq, Equal] {
   }
 }
 ```
+
+@@@@
+
+@@@@ slide
+
+### Covariant special Functor
+
+![map.svg](images/map.svg)
 
 @@@@
 

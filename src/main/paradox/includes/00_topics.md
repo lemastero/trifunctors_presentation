@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide { image='images/scalac_logo.png' }
  
@@ -72,11 +72,6 @@ Prepare input, map output and errors & more
 
 ```scala
 trait Zivariant[Z[-_,+_,+_]] {
-  def contramap[R,E,A,R1](r: R1 => R): Z[R,E,A] => Z[R1,E,A]
-  def mapLeft[R,E,A,E1](e: E => E1): Z[R,E,A] => Z[R,E1,A]
-  def map[R,E,A,A1](a: A => A1): Z[R,E,A] => Z[R,E,A1]
-  def bimap[R,E,A,E1,A1](e: E=>E1,a: A=>A1): Z[R,E,A]=>Z[R,E1,A1]
-  def dimap[R,E,A,RR,AA](r: RR=>R,a: A=>AA): Z[R,E,A]=>Z[RR,E,AA]
   def zimap[R,E,A,R1,E1,A1](
       r: R1 => R, e: E => E1, a: A => A1
   ): Z[R,E,A] => Z[R1,E1,A1]

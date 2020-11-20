@@ -1,4 +1,11 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
+
+@@@@ slide
+
+## Zivariant -
+### prepare input, map output and error
+
+@@@@
 
 @@@@ slide
 
@@ -28,7 +35,7 @@ Trio[-R,+E,+A] ~ R => Either[E,A]  // ZIO        (? IO)
 
 @@@@ slide
 
-### Problem 1
+### Hidden abstraction
 What type class is behind ZIO ?
 
 ```scala

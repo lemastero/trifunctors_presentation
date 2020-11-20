@@ -1,4 +1,110 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
+
+@@@@ slide
+
+### Common pattern
+
+* ZIO
+* R => Either[E,A]  
+
+@@@@
+
+@@@@ slide
+
+### Covariant superpowers
+
+ZIO
+
+```scala
+val loadEmployee: ZIO[Int, Throwable, Employee] = ???
+val loadDetails: ZIO[Int, Throwable, EmployeeDetails] =
+  loadEmployeeFromDb.map(getDetails)
+```
+
+R => Either[E,A]
+
+```scala
+def loadEmployee: Int => Either[Throwable, Employee] = ???
+val loadDetails: Int => Either[Throwable, EmployeeDetails] =
+  loadFromDb andThen { _.map(getDetails) }
+```
+
+@@@@
+
+@@@@ slide
+
+### Contravariant superpowers
+
+ZIO
+
+```scala
+val loadEmployee: ZIO[Int, Throwable, Employee] = ???
+val loadDetails: ZIO[EmployeeId, Throwable, Employee] =
+  loadEmployeeFromDb.contramap(idFromEmployee)
+```
+
+R => Either[E,A]
+
+```scala
+val loadEmployee: Int => Either[Throwable, Employee] = ???
+val loadDetails: EmployeeId => Either[Throwable, Employee] =
+  loadFromDb compose idFromEmployee
+```
+
+@@@@
+
+@@@@ slide
+
+### Bicovariant superpowers
+
+ZIO
+
+```scala
+val loadEmployee: ZIO[Int, Throwable, Employee] = ???
+val loadDetails: ZIO[Int, AppError, EmployeeDetails] =
+  loadEmployeeFromDb.bimap(asDomainError, getDetails)
+```
+
+R => Either[E,A]
+
+```scala
+val loadEmployee: Int => Either[Throwable, Employee] = ???
+val loadDetails: Int => Either[AppError, EmployeeDetails] =
+  loadFromDb andThen { _.bimap(asDomainError, getDetails) }
+```
+
+@@@@
+
+
+@@@@ slide
+
+### Divariant superpowers
+
+ZIO
+
+```scala
+val loadEmployeeFromDb: ZIO[Int, Throwable, Employee] = ???
+val loadEmployee: ZIO[EmployeeId, Throwable, EmployeeDetails] =
+  loadEmployeeFromDb.dimap(idFromEmployee, getDetails)
+```
+
+R => Either[E,A]
+
+```scala
+val loadEmployee: Int => Either[Throwable, Employee] = ???
+val loadDet: EmployeeId => Either[Throwable, EmployeeDetails] =
+  loadFromDb
+    .andThen{ _.map(getDetails) }
+    .compose idFromEmployee
+```
+
+@@@@
+
+@@@@ slide
+
+### Divariant & Bicovariant enough?
+
+@@@@
 
 @@@@ slide
 
@@ -65,7 +171,7 @@ def FailedZIODiv[A] = new Divariant[ZIO[*,*,A]] {
 @@@@ slide
 
 ### Too many instances:
-* 2 Divariant
+* 2 x Divariant
 * Bicovariant
 * 2 x Covariant
 * Contravariant
@@ -74,7 +180,7 @@ def FailedZIODiv[A] = new Divariant[ZIO[*,*,A]] {
 
 @@@@ slide
 
-### One abstraction to rule them all
+### 1 abstraction to rule them all (1/2)
 
 ```scala
 trait Zivariant[Z[-_,+_,+_]] {
@@ -95,7 +201,22 @@ trait Zivariant[Z[-_,+_,+_]] {
 
 @@@@ slide
 
-### map, map Error and contramap all in one
+### 1 abstraction to rule them all (2/2)
+
+We can express others by:
+```scala
+trait Zivariant[Z[-_,+_,+_]] {
+  def contramap[R,E,A,R1](r: R1 => R): Z[R,E,A] => Z[R1,E,A]
+  def mapLeft[R,E,A,E1](e: E => E1): Z[R,E,A] => Z[R,E1,A]
+  def map[R,E,A,A1](a: A => A1): Z[R,E,A] => Z[R,E,A1]
+}
+```
+
+@@@@
+
+@@@@ slide
+
+### map, map error and contramap all in one
 
 ```scala
 trait Zivariant[Z[-_,+_,+_]] {
@@ -103,8 +224,6 @@ trait Zivariant[Z[-_,+_,+_]] {
   def zimap[R,E,A,R1,E1,A1](
     r: R1 => R, e: E => E1, a: A => A1
   ): Z[R,E,A] => Z[R1,E1,A1]
-  
-  // ...
 }
 ```
 
@@ -118,13 +237,10 @@ trait Zivariant[Z[-_,+_,+_]] {
 trait Zivariant[Z[-_,+_,+_]] {
 
   def contramap[R,E,A,R1](r: R1 => R) = zimap(r, id[E], id[A])
-
   def mapLeft[R,E,A,E1](e: E => E1)   = zimap(id[R], e, id[A])
-
   def map[R,E,A,A1](a: A => A1)       = zimap(id[R], id[E], a)
 
   def bimap[R,E,A,E1,A1](e: E=>E1,a: A=>A1) = zimap(id[R],e,a)
-
   def dimap[R,E,A,RR,AA](r: RR=>R,a: A=>AA) = zimap(r,id[E],a)
 }
 ```
@@ -135,8 +251,9 @@ trait Zivariant[Z[-_,+_,+_]] {
 
 ### Zivariant R => Either[E,A]
 
+Instance:
 ```scala
-new Zivariant[({type lambda[-R,+E,+A] = R=>Either[E,A]})#lambda] {
+new Zivariant[({type lambda[-R,+E,+A]=R=>Either[E,A]})#lambda] {
   override def zimap[R,E,A,R1,E1,A1](
     r: R1 => R, e: E => E1, a: A => A1
   ): (R => Either[E,A]) => R1 => Either[E1,A1] =
@@ -152,18 +269,18 @@ new Zivariant[({type lambda[-R,+E,+A] = R=>Either[E,A]})#lambda] {
 
 @@@@ slide
 
-### Zivariant R => (E,A)
+### Use Zivariant R => Either[E,A]
 
+Usage:
 ```scala
-new Zivariant[({type lambda[-R,+E,+A] = R=>(E,A)})#lambda] {
-  def zimap[R,E,A,R1,E1,A1](
-    r: R1 => R, e: E => E1, a: A => A1
-  ): (R=>(E,A)) => R1=>(E1,A1) =
-    rea => r1 => {
-      val (ee, aa) = (r andThen rea)(r1)
-      (e(ee), a(aa))
-    }
-}
+import Zivariant.FunctionEitherZivariant.zimap
+
+val loadEmployee: Int => Either[Throwable, Employee] = ???
+val getEmployeeDetails: EmployeeId => Either[AppError, EmployeeDetails] =
+  zimap(idFromEmployee, asDomainError, getDetails)(loadFromDb)
+
+val result: Either[AppError, EmployeeDetails] = getEmployeeDetails(EmployeeId(4))
+result == Right(EmployeeDetails("Londo Mollari"))
 ```
 
 @@@@
@@ -271,41 +388,13 @@ implicit val ZManagedZivariant: Zivariant[ZManaged] =
   }
 ```
 
-No bimap, no provideSome for ZLayer ?
-
 @@@@
 
 @@@@ slide
 
-### Othere Zivariant instances
+### Zivariant special Functor
 
-```scala
-ZIO[-R, +E, +A]
-ZLayer[-RIn, +E, +ROut]
-ZManaged[-R, +E, +A]
-ZStream[-R, +E, +O]
-ZSTM[-R, +E, +A]
-```
-
-@@@@
-
-@@@@ slide
-    
-### Zivariant example
-
-```scala
-import Zivariant.FunctionEitherZivariant.zimap
-
-val parseAvro: String => Either[Throwable, AvroModel] = ???
-
-def getContent: KafkaMessage => String = ???
-def handleError: Throwable => AppError = ???
-def toDomainModel: AvroModel => DomainModel = ???
-
-val kafkaHandler = zimap(getContent, handleError, toDomainModel)
-val price: KafkaMessage => Either[AppError, DomainModel] =
-  kafkaHandler(parseAvro)
-```
+![zimap5.svg](images/zimap5.svg)
 
 @@@@
 

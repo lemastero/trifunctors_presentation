@@ -1,5 +1,5 @@
 
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 # Zivariant
 ## zio-prelude modularity
 
@@ -14,7 +14,6 @@
 @@include[topics](includes/05_RightCovariant.md)
 @@include[topics](includes/07_Aproaches_IO.md)
 @@include[topics](includes/08_Zivariant.md)
-@@include[topics](includes/09_Fnvariant.md)
 @@include[topics](includes/13_Deriving.md)
 @@include[topics](includes/08_Zivariant_Design.md)
 @@include[topics](includes/15_summary.md)

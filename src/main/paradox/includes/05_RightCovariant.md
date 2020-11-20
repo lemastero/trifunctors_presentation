@@ -1,4 +1,11 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
+
+@@@@ slide
+
+## Modularity -
+### extract common pattern
+
+@@@@
 
 @@@@ slide
 ### Divariant ∩ Bivariant ?

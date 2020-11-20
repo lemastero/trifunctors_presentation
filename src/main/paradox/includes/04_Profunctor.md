@@ -1,4 +1,4 @@
-@@@ slide { color=#242220 }
+@@@ slide { color=#222222 }
 
 @@@@ slide
 
@@ -34,8 +34,61 @@ val loadEmployee: ZIO[Int, Throwable, Employee] = ???
 def getDetails: Employee => EmployeeDetails = ???
 def idFromEmployee: EmployeeId => ???
 
-val loadEmployeeDetails: ZIO[EmployeeId, Throwable, EmployeeDetails] =
+val loadDetails: ZIO[EmployeeId, Throwable, EmployeeDetails] =
   loadEmployee.provideSome(idFromEmployee).map(getDetails)
+```
+@@@@
+
+@@@@ slide
+
+### Divariant
+
+leftContramap - prepare input, rightMap - map output
+
+```scala
+trait Divariant[:=>[-_, +_]] {
+
+  def rightMap[A,B,C](f: B => C): (A :=> B) => (A :=> C)
+
+  def leftContramap[A,B,C](f: C => A): (A :=> B) => (C :=> B)
+
+  def dimap[A,B,C,D](f: C => A, g: B => D):
+      (A :=> B) => (C :=> D) =
+    (ab: A :=> B) => rightMap(g)(leftContramap(f)(ab))
+}
+```
+@@@@
+
+@@@@ slide
+### Divariant - Function1
+
+dimap behaves as rightMap followed by leftContramap 
+
+```scala
+implicit val Function1Divariant: Divariant[Function1] =
+  new Divariant[Function1] {
+    def leftContramap[A,B,C](c2a: C => A): (A => B) => C => B = 
+      a2b => c2a andThen a2b
+    
+    def rightMap[A,B,C](b2c: B => C): (A => B) => A => C =
+      a2b => b2c compose a2b 
+  }
+```
+@@@@
+
+@@@@ slide
+### Divariant - ZIO
+
+dimap behaves as rightMap followed by leftContramap 
+
+```scala
+implicit def ZioDivariant[E] =
+    new Divariant[({type lambda[-R,+A] = ZIO[R,E,A]})#lambda] {
+ def leftContramap[R,A,T](f: T => R): ZIO[R,E,A] => ZIO[T,E,A] =
+   rea => rea.provideSome(f)
+ def rightMap[R,A,D](g: A => D): ZIO[R,E,A] => ZIO[R,E,D] =
+   rea => rea.map(g)
+}
 ```
 @@@@
 
@@ -124,20 +177,11 @@ def dimapCoherence[A, A2, A3, B, B2, B3](
 @@@@
 
 @@@@ slide
-### Divariant Instance - Function1
 
-dimap behaves as rightMap followed by leftContramap 
+### Divariant special Functor
 
-```scala
-implicit val Function1Divariant: Divariant[Function1] =
-  new Divariant[Function1] {
-    def leftContramap[A,B,C](c2a: C => A): (A => B) => C => B = 
-      a2b => c2a andThen a2b
-    
-    def rightMap[A,B,C](b2c: B => C): (A => B) => A => C =
-      a2b => b2c compose a2b 
-  }
-```
+![dimap6.svg](images/dimap6.svg)
+
 @@@@
 
 @@@
