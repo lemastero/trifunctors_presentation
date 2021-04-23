@@ -71,7 +71,7 @@ object Covariant extends LawfulF.Covariant[DeriveEq, Equal] {
 
 ### Covariant special Functor
 
-![map.svg](images/map.svg)
+![map2.svg](images/map2.svg)
 
 @@@@
 

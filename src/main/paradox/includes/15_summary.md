@@ -10,6 +10,7 @@
 * @link[zio-prelude #291](https://github.com/zio/zio-prelude/issues/291) issue motivating Zivariant
 * @link[zio #4220](https://github.com/zio/zio/pull/4220) add support for Divariant laws - LawfulF and LawsF
 * @link[lemastero/Triglav](https://github.com/lemastero/Triglav) Experiments some did not ended up in zio-prelude
+* @link[lemastero/Triglav](https://github.com/lemastero/Triglav) Experiments some did not ended up in zio-prelude
 
 @@@@
 
@@ -25,8 +26,8 @@ Big thank you for @link[Scalac](https://scalac.io/) for giving me time to do OS 
 
 @@@@@ fragments
 zio-prelude:  
-* Divariant (Profunctor, e.g. A => B)  
-* Bivariant (Bifunctor, e.g. Either, Tuple2)  
+* Divariant (Profunctor, prepare input, map output)  
+* Bivariant (Bifunctor, map both outputs)  
 * RightCovariant == Divariant ∩ Bivariant  
 * Zivariant == Divariant + Bivariant  
 design:  

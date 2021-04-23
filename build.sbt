@@ -16,6 +16,9 @@ lazy val presentation = (project in file("."))
     (Compile / paradoxMarkdownToHtml / excludeFilter) :=
       (Compile / paradoxMarkdownToHtml / excludeFilter).value ||
         ParadoxPlugin.InDirectoryFilter((Compile / paradox / sourceDirectory).value / "includes"),
+    (Compile / paradoxPdfSite / excludeFilter) :=
+      (Compile / paradoxMarkdownToHtml / excludeFilter).value ||
+        ParadoxPlugin.InDirectoryFilter((Compile / paradox / sourceDirectory).value / "includes"),
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.2.0" withSources(),
       "dev.zio" %% "zio-prelude"  % "1.0.0-RC1" withSources(),
