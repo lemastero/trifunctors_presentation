@@ -12,4 +12,4 @@ sbt '~paradoxBrowse'
 sbt ~previewAuto
 ```
 
-file:///Users/piter/work/lemastero/trifunctors_presentation/target/paradox/site/main/index.html
+Generates file in: ``./target/paradox/site/main/index.html`
